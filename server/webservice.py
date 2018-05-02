@@ -7,6 +7,8 @@ app = Flask(__name__)
 
 num_state = 6
 num_action = 2
+
+### if you want to change the number of node in hidden, you must change it in build_model() in DQN.py and here both.
 num_hidden_node = [120,120]
 
 dqn_agent = DQNAgent(num_state,num_action,num_hidden_node)

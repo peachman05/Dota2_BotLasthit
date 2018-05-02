@@ -33,11 +33,9 @@ function GameControl:InitialValue()
 	GameControl:resetThing()
 end
 
+---- respawn hero and reset health
 function GameControl:resetThing() 
 	FindClearSpaceForUnit(GameControl.hero, GameControl.midRadianTower:GetAbsOrigin() + Vector(500,500,0) , true)
-	--RandomVector( RandomFloat( 0, 200 ))
-	
-
 	GameControl.hero:SetHealth( GameControl.hero:GetMaxHealth() )
 	GameControl.midRadianTower:SetHealth( GameControl.midRadianTower:GetMaxHealth() )
 	GameControl.midDireTower:SetHealth( GameControl.midDireTower:GetMaxHealth() )
@@ -50,6 +48,7 @@ end
 --[[
         Creep Function
 --]] 
+
 
 function GameControl:CreateCreep()
     --------------- Create Radian Creep
@@ -97,12 +96,11 @@ function GameControl:ForceKillCreep(creeps)
 	end
 end
 
-
+--- act to environment [ 0 stop (delay 0.1), 1 hit (delay 0.4 if bot can hit immediately) ]
 function GameControl:runAction(action,state)
 	if CalcDistanceBetweenEntityOBB( GameControl.hero, GameControl.creeps_Dire[1]) < 500 then
 		if action == 0 then
 			GameControl.hero:Stop()
-			-- print('stop')
 			return 0.1
 		elseif action == 1 then
 			GameControl.hero:Stop()
@@ -112,52 +110,13 @@ function GameControl:runAction(action,state)
 			else
 				return 0.1
 			end
-			-- print('hit')
-			
-			
+	
 		end
 	else
 		GameControl.hero:MoveToTargetToAttack(GameControl.midDireTower)
 		return 0.1
 	end
 end
---[[
-        Server Function
---]] 
--- function GameControl:requestActionFromServer(method, input)
---     input = input or {}
---     local dataSend = {}
---     dataSend['method'] = method
-
---     if dataSend['method'] == GET_DQN_DETAIL then
--- 		print("GET DQN")
-
--- 	elseif dataSend['method'] == UPPDATE_MODEL_STATE then
--- 		print("update model")
--- 		dataSend['mem_episode'] = dqn_agent.memory
-
---     end
-    
---     request = CreateHTTPRequestScriptVM("POST", "http://localhost:8080" )
--- 	request:SetHTTPRequestHeaderValue("Accept", "application/json")
---     request:SetHTTPRequestRawPostBody('application/json', dkjson.encode(dataSend))
-
---     request:Send( function( result )
-
--- 		if result["StatusCode"] == 200 then
---             dict_value = dkjson.decode(result['Body'])
-
---             if dataSend['method'] == GET_DQN_DETAIL then
-                
---             elseif dataSend['method'] == UPPDATE_MODEL_STATE then
---                 dqn_agent.memory = {}             
---             end
-
---         end
-
--- 	end )
-
--- end
 
 
 --[[
@@ -168,8 +127,7 @@ function GameControl:getState()
 	local stateTemp = {}
 	-- print("getState")	
 	time_now = GameRules:GetGameTime()
-	-- stateArray[1] = normalize(GameControl.creeps_Dire[1]:GetHealth(), 0, GameControl.creeps_Dire[1]:GetMaxHealth() )
-	-- stateArray[2] = normalize(GameControl.hero:TimeUntilNextAttack(), 0 ,GameControl.hero:GetBaseAttackTime() )
+
 	stateArray[1] = GameControl.creeps_Dire[1]:GetHealth() /550
 	stateArray[2] = GameControl.hero:TimeUntilNextAttack() 
 	stateTemp[1] = (GameControl.creeps_Radian[1]:GetLastAttackTime() + 1) - time_now
