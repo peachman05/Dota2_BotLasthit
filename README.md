@@ -2,7 +2,7 @@
 Reinforcement Learning AI for lasthiting
 
 ## How to run
-### Copy project
+### Create addon and paste project
 1. install **Dota 2 Workshop Tools DLC** in steam
 2. open it 
 3. click **Create Empty Addon** button 
